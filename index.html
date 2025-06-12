@@ -3,32 +3,32 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>LINEログインページ</title>
+  <title>LINEログイン</title>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
-  <h2>LINEログインしてください</h2>
-  <button onclick="loginWithLINE()">LINEでログイン</button>
+  <h2>LINEログイン中...</h2>
 
   <script>
-    function loginWithLINE() {
-      liff.init({
-        liffId: "1657254156-85059NlX"
-      }).then(() => {
-        if (!liff.isLoggedIn()) {
-          liff.login(); // ログインしてない場合、ログイン画面へ
-        } else {
-          liff.getProfile().then(profile => {
-            alert("こんにちは、" + profile.displayName + "さん！");
-            // ログイン済みならフォームページへ遷移
-            window.location.href = "health_form_complete1.html";
-          });
-        }
-      }).catch(err => {
-        console.error("LIFFの初期化に失敗しました:", err);
-        alert("エラーが発生しました。もう一度お試しください。");
-      });
-    }
+    liff.init({
+      liffId: "1657254156-85059NlX"
+    }).then(() => {
+      if (!liff.isLoggedIn()) {
+        liff.login();
+      } else {
+        liff.getProfile().then(profile => {
+          alert("こんにちは、" + profile.displayName + " さん！");
+          setTimeout(() => {
+            const name = encodeURIComponent(profile.displayName);
+            const userId = encodeURIComponent(profile.userId);
+            window.location.href = `health_form_complete1.html?name=${name}&userId=${userId}`;
+          }, 500);
+        });
+      }
+    }).catch(err => {
+      console.error("LIFF初期化失敗:", err);
+      alert("LINEログインに失敗しました。");
+    });
   </script>
 </body>
 </html>
