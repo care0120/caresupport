@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>マイク入力方法</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2em;
+      text-align: center;
+    }
+    h2 {
+      color: #1e88e5; /* 青字 */
+    }
+    p {
+      font-size: 1.2rem;
+      color: #000;
+      margin-top: 1em;
+    }
+    img {
+      margin-top: 1.5em;
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h2>＜マイク入力方法＞</h2>
+  <p>右上の黒いマイクを押してお話してください</p>
+  <img src="mic_image.jpg" alt="マイクの位置説明" />
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script>
+    liff.init({ liffId: "1657254156-85059NlX" }).then(() => {
+      if (!liff.isLoggedIn()) {
+        liff.login();
+      } else {
+        liff.getProfile().then(profile => {
+          console.log("ようこそ " + profile.displayName + " さん");
+        });
+      }
+    }).catch(err => {
+      console.error("LIFFエラー:", err);
+    });
+  </script>
+</body>
+</html>
