@@ -3,33 +3,32 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>健康記録アプリ メニュー</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      padding: 3em;
-      background: #f0f8ff;
-    }
-    h1 {
-      font-size: 2em;
-      margin-bottom: 1em;
-    }
-    a {
-      display: inline-block;
-      margin: 1em;
-      padding: 1em 2em;
-      background: #90caf9;
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      font-size: 1.2em;
-    }
-  </style>
+  <title>LINEログインページ</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
 <body>
-  <h1>📝 健康記録アプリ</h1>
-  <a href="health_form_liff.html">📋 記録フォームを開く</a>
-  <a href="admin.html">🔍 管理者画面（履歴）</a>
+  <h2>LINEログインしてください</h2>
+  <button onclick="loginWithLINE()">LINEでログイン</button>
+
+  <script>
+    function loginWithLINE() {
+      liff.init({
+        liffId: "1657254156-85059NlX"
+      }).then(() => {
+        if (!liff.isLoggedIn()) {
+          liff.login(); // ログインしてない場合、ログイン画面へ
+        } else {
+          liff.getProfile().then(profile => {
+            alert("こんにちは、" + profile.displayName + "さん！");
+            // ログイン済みならフォームページへ遷移
+            window.location.href = "health_form_complete1.html";
+          });
+        }
+      }).catch(err => {
+        console.error("LIFFの初期化に失敗しました:", err);
+        alert("エラーが発生しました。もう一度お試しください。");
+      });
+    }
+  </script>
 </body>
 </html>
