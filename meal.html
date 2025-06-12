@@ -1,0 +1,34 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>今日のお食事</title>
+</head>
+<body>
+  <h2>こんにちは、<span id="userDisplay">読み込み中...</span></h2>
+  <h3>🍽 今日のお食事</h3>
+  <form>
+    <label>朝食:</label><input type="text" name="breakfast"><br>
+    <label>昼食:</label><input type="text" name="lunch"><br>
+    <label>夕食:</label><input type="text" name="dinner"><br>
+    <button type="submit">送信</button>
+  </form>
+  
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+  liff.init({ liffId: "1657254156-85059NlX" }).then(() => {
+    if (!liff.isLoggedIn()) {
+      liff.login();
+    } else {
+      liff.getProfile().then(profile => {
+        document.getElementById("userDisplay").innerText = profile.displayName + " さん";
+      });
+    }
+  }).catch(err => {
+    console.error("LIFF初期化エラー", err);
+  });
+</script>
+
+</body>
+</html>
