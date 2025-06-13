@@ -29,7 +29,7 @@
       document.getElementById("record-form").addEventListener("submit", function (e) {
         e.preventDefault();
         const content = document.getElementById("content").value;
-        const scriptUrl = "YOUR_GAS_WEBAPP_URL"; // ★あとで置き換え
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbxRzxB0QE8IId7GJn9HB7N1in1WsAjv-O9mE6kGWDJtzGVfIbHPieCnKrisvP-0Jyws/exec"; // ★あとで置き換え
 
         fetch(scriptUrl, {
           method: "POST",
