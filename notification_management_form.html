@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>通知管理フォーム</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      liff.init({ liffId: "YOUR_LIFF_ID" })
+        .then(() => {
+          if (!liff.isLoggedIn()) {
+            liff.login();
+          }
+        })
+        .catch(err => {
+          document.body.innerHTML = "<p>LIFF初期化エラー：" + err + "</p>";
+        });
+    });
+  </script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f2f2f2;
+      padding: 1em;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 1em;
+    }
+    input, select, textarea {
+      width: 100%;
+      font-size: 1rem;
+      padding: 0.5em;
+      margin-top: 0.5em;
+    }
+    button {
+      margin-top: 1.5em;
+      padding: 0.75em;
+      width: 100%;
+      font-size: 1rem;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h2>📋 通知管理パネル</h2>
+
+  <form>
+    <label>✅ 今日通知を送る？</label>
+    <select name="send_today">
+      <option value="yes">はい</option>
+      <option value="no">いいえ</option>
+    </select>
+
+    <label>📝 通知メッセージ</label>
+    <textarea name="message" placeholder="例：お薬の時間です。服用を確認してください。"></textarea>
+
+    <label>🕒 通知時間</label>
+    <input type="time" name="notify_time">
+
+    <label>👥 通知対象（UID）</label>
+    <textarea name="uids" placeholder="UIDをカンマ区切りで入力（例：Uxxxx,Uyyyy）"></textarea>
+
+    <button type="submit">✅ 保存</button>
+  </form>
+</body>
+</html>
