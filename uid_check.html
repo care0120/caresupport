@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>LINE UID 確認</title>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      liff.init({ liffId: "YOUR_LIFF_ID" }) // ← ご自身の LIFF ID に置き換えてください
+        .then(() => {
+          if (!liff.isLoggedIn()) {
+            liff.login();
+          } else {
+            return liff.getProfile();
+          }
+        })
+        .then(profile => {
+          const uid = profile.userId;
+          document.getElementById("uid").textContent = uid;
+        })
+        .catch(err => {
+          document.getElementById("uid").textContent = "エラー: " + err;
+        });
+    });
+  </script>
+</head>
+<body style="font-family: sans-serif; padding: 2em;">
+  <h1>🔍 あなたのLINE UID</h1>
+  <p>下に表示されるIDをコピーして、スプレッドシートに登録してください：</p>
+  <div style="margin-top: 1em; font-size: 1.2em; color: #333; font-weight: bold;">
+    UID: <span id="uid">取得中...</span>
+  </div>
+</body>
+</html>
