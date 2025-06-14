@@ -3,7 +3,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>食事記録フォーム（高齢者向け最終版）</title>
+  <title>食事記録フォーム（2列・ボタン順修正）</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <style>
     body {
@@ -20,27 +20,28 @@
     .section {
       margin-bottom: 1.5em;
     }
-    .checkbox-list {
-      display: flex;
-      flex-direction: column;
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
       gap: 1em;
     }
-    .checkbox-list input[type="checkbox"] {
+    .checkbox-grid input[type="checkbox"] {
       display: none;
     }
-    .checkbox-list label {
+    .checkbox-grid label {
       display: flex;
       justify-content: center;
       align-items: center;
       background: #f0f0f0;
       border: 2px solid #888;
       border-radius: 10px;
-      font-size: 28px;
-      padding: 1em;
-      width: 100%;
+      font-size: 26px;
+      padding: 0.8em 1em;
+      min-width: 6em;
+      white-space: nowrap;
       box-sizing: border-box;
     }
-    .checkbox-list input[type="checkbox"]:checked + label {
+    .checkbox-grid input[type="checkbox"]:checked + label {
       background-color: #007BFF;
       color: white;
       border-color: #0056b3;
@@ -75,13 +76,12 @@
       font-size: 28px;
       padding: 1.2em 2em;
       cursor: pointer;
-      margin-top: 2em;
       border-radius: 10px;
     }
     .button-row {
       display: flex;
       flex-direction: column;
-      gap: 1em;
+      gap: 1.5em;
       margin-top: 2em;
     }
     .back-btn {
@@ -99,15 +99,20 @@
   <h1>🍙 何を食べましたか？</h1>
 
   <form id="formModal">
+    <div class="button-row">
+      <button type="button" class="send-btn" onclick="onSend()">📤 送信</button>
+    </div>
+
     <div class="section">
       <strong style="font-size:32px;">主食を選択：</strong>
-      <div class="checkbox-list">
+      <div class="checkbox-grid">
         <input type="checkbox" id="meal1" name="meal" value="ごはん" data-category="食事"><label for="meal1">ごはん</label>
         <input type="checkbox" id="meal2" name="meal" value="パン" data-category="食事"><label for="meal2">パン</label>
         <input type="checkbox" id="meal3" name="meal" value="めん" data-category="食事"><label for="meal3">めん</label>
         <input type="checkbox" id="meal4" name="meal" value="惣菜" data-category="食事"><label for="meal4">惣菜</label>
         <input type="checkbox" id="meal5" name="meal" value="肉" data-category="食事"><label for="meal5">肉</label>
         <input type="checkbox" id="meal6" name="meal" value="魚" data-category="食事"><label for="meal6">魚</label>
+        <input type="checkbox" id="meal7" name="meal" value="野菜" data-category="食事"><label for="meal7">野菜</label>
       </div>
     </div>
 
@@ -132,7 +137,6 @@
 
     <div class="button-row">
       <button type="button" class="back-btn" onclick="history.back()">← 戻る</button>
-      <button type="button" class="send-btn" onclick="onSend()">📤 送信</button>
     </div>
   </form>
 
