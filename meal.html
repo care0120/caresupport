@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>食事記録フォーム（スマホ対応・ボタン式）</title>
+  <title>食事記録フォーム（グリッド配置・スマホ対応）</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <style>
     body {
@@ -16,36 +15,29 @@
     .section {
       margin-bottom: 2em;
     }
-    .checkbox-group {
-      display: flex;
-      flex-wrap: wrap;
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 1em;
     }
-    .checkbox-group label {
-      display: inline-block;
+    .checkbox-grid input[type="checkbox"] {
+      display: none;
+    }
+    .checkbox-grid label {
+      display: block;
       background: #f0f0f0;
       border: 3px solid #888;
       border-radius: 10px;
-      padding: 1em 1.5em;
+      text-align: center;
       font-size: 28px;
+      padding: 1em 0;
       cursor: pointer;
       user-select: none;
     }
-    .checkbox-group input[type="checkbox"] {
-      display: none;
-    }
-    .checkbox-group input[type="checkbox"]:checked + span {
+    .checkbox-grid input[type="checkbox"]:checked + label {
       background-color: #007BFF;
       color: white;
       border-color: #0056b3;
-    }
-    .checkbox-group label span {
-      display: inline-block;
-      padding: 1em 1.5em;
-      border: 3px solid #888;
-      border-radius: 10px;
-      font-size: 28px;
-      background: #f0f0f0;
     }
 
     input[type="text"] {
@@ -106,26 +98,23 @@
 </head>
 <body>
   <h1 style="font-size:32px;">🍙 何を食べましたか？</h1>
-
   <form id="formModal">
     <div class="section">
       <strong>主食を選択：</strong>
-      <div class="checkbox-group">
-        <label><input type="checkbox" name="meal" value="ごはん" data-category="食事"><span>ごはん</span></label>
-        <label><input type="checkbox" name="meal" value="パン" data-category="食事"><span>パン</span></label>
-        <label><input type="checkbox" name="meal" value="めん" data-category="食事"><span>めん</span></label>
-        <label><input type="checkbox" name="meal" value="野菜" data-category="食事"><span>野菜</span></label>
-        <label><input type="checkbox" name="meal" value="惣菜" data-category="食事"><span>惣菜</span></label>
-        <label><input type="checkbox" name="meal" value="肉" data-category="食事"><span>肉</span></label>
-        <label><input type="checkbox" name="meal" value="魚" data-category="食事"><span>魚</span></label>
+      <div class="checkbox-grid">
+        <input type="checkbox" id="meal1" name="meal" value="ごはん" data-category="食事"><label for="meal1">ごはん</label>
+        <input type="checkbox" id="meal2" name="meal" value="パン" data-category="食事"><label for="meal2">パン</label>
+        <input type="checkbox" id="meal3" name="meal" value="めん" data-category="食事"><label for="meal3">めん</label>
+        <input type="checkbox" id="meal4" name="meal" value="野菜" data-category="食事"><label for="meal4">野菜</label>
+        <input type="checkbox" id="meal5" name="meal" value="惣菜" data-category="食事"><label for="meal5">惣菜</label>
+        <input type="checkbox" id="meal6" name="meal" value="肉" data-category="食事"><label for="meal6">肉</label>
+        <input type="checkbox" id="meal7" name="meal" value="魚" data-category="食事"><label for="meal7">魚</label>
       </div>
     </div>
-
     <div class="section">
       <label>おかず（自由入力）：</label>
       <input type="text" name="side" data-category="食事" placeholder="例：焼き魚、煮物など">
     </div>
-
     <div class="section">
       <strong>量を選択：</strong>
       <div class="radio-group">
@@ -134,35 +123,25 @@
         <label><input type="radio" name="amount" value="少なめ" data-category="食事"> 少なめ</label>
       </div>
     </div>
-
     <div class="section">
       <label>感想（自由入力）：</label>
       <input type="text" name="comment" data-category="食事" placeholder="例：美味しかった、あまり食べられなかった…">
     </div>
-
     <div class="button-row">
       <button type="button" class="back-btn" onclick="history.back()">← 戻る</button>
       <button type="button" class="send-btn" onclick="onSend()">📤 送信</button>
     </div>
   </form>
-
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script>
     liff.init({ liffId: "1657254156-zGmYJPg3" })
-      .then(() => {
-        if (!liff.isLoggedIn()) {
-          liff.login();
-        }
-      })
-      .catch(err => {
-        alert("LIFF初期化エラー：" + err);
-      });
+      .then(() => { if (!liff.isLoggedIn()) liff.login(); })
+      .catch(err => { alert("LIFF初期化エラー：" + err); });
 
     function saveToHistory(modalId) {
       const key = modalId + "_history";
       const history = JSON.parse(localStorage.getItem(key) || '[]');
       const now = new Date();
-
       const formElements = document.querySelectorAll('#' + modalId + ' input');
       const content = [];
 
