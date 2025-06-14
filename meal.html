@@ -3,7 +3,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>食事記録フォーム（2列・ボタン順修正）</title>
+  <title>食事記録フォーム</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <style>
     body {
@@ -16,6 +16,10 @@
     h1 {
       font-size: 30px;
       margin-bottom: 0.8em;
+    }
+    .date-label {
+      font-size: 24px;
+      margin-bottom: 0.5em;
     }
     .section {
       margin-bottom: 1.5em;
@@ -96,13 +100,10 @@
   </style>
 </head>
 <body>
+  <div class="date-label">📅 日付：6/14（土）</div>
   <h1>🍙 何を食べましたか？</h1>
 
   <form id="formModal">
-    <div class="button-row">
-      <button type="button" class="send-btn" onclick="onSend()">📤 送信</button>
-    </div>
-
     <div class="section">
       <strong style="font-size:32px;">主食を選択：</strong>
       <div class="checkbox-grid">
@@ -136,6 +137,7 @@
     </div>
 
     <div class="button-row">
+      <button type="button" class="send-btn" onclick="onSend()">👆報告する</button>
       <button type="button" class="back-btn" onclick="history.back()">← 戻る</button>
     </div>
   </form>
@@ -156,20 +158,17 @@
       const key = modalId + "_history";
       const history = JSON.parse(localStorage.getItem(key) || '[]');
       const now = new Date();
-
       const formElements = document.querySelectorAll('#' + modalId + ' input');
       const content = [];
-
       formElements.forEach(el => {
         if ((el.type === "checkbox" && !el.checked) || (el.type === "radio" && !el.checked)) return;
         if (el.type === "checkbox" || el.type === "radio") {
           content.push({ category: el.dataset.category || "その他", value: el.value });
         } else if (el.value && el.value.trim() !== "") {
           const label = el.placeholder || el.name;
-          content.push({ category: el.dataset.category || "その他", value: `${label}：${el.value}` });
+          content.push({ category: el.dataset.category || "その他", value: label + "：" + el.value });
         }
       });
-
       if (content.length > 0) {
         history.push({ date: now.toISOString(), content: content });
         localStorage.setItem(key, JSON.stringify(history));
