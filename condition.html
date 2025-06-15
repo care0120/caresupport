@@ -149,11 +149,30 @@
     </div>
   </form>
 
+
+<div id="errorPopup" style="
+  display: none;
+  font-size: 2.5rem;
+  color: red;
+  background: #fff8f8;
+  padding: 1em 2em;
+  border-radius: 12px;
+  border: 2px solid red;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  text-align: center;">
+  ❌ 入力できていません
+</div>
+
 <div id="successPopup" style="display:none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
   background: white; border: 4px solid #007BFF; border-radius: 16px; padding: 1.5em 2em; z-index: 9999;
   font-size: 2.5rem; text-align: center; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
   ⭕ 送信完了！
 </div>
+
 
 
 
@@ -168,7 +187,11 @@
     let textEntered = textarea && textarea.value.trim().length > 0;
 
     if (!radioChecked && !checkboxChecked && !textEntered) {
-      alert("入力してから報告してください");
+      const errorPopup = document.getElementById('errorPopup');
+      errorPopup.style.display = 'block';
+      setTimeout(() => {
+        errorPopup.style.display = 'none';
+      }, 2000);
       return;
     }
 
@@ -179,6 +202,7 @@
     }, 3000);
   }
 </script>
+
 
 
 </body>
