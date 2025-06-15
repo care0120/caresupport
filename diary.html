@@ -2,139 +2,189 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<style>
-  body {
-    font-size: 1.8rem;
-    font-family: sans-serif;
-    padding: 1.2em;
-    text-align: left;
-  }
-  textarea {
-    width: 100%;
-    font-size: 1.5rem;
-    padding: 0.5em;
-    box-sizing: border-box;
-  }
-  .send-btn {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    padding: 0.6em 1.2em;
-    font-size: 1.4rem;
-    margin-top: 1em;
-    border-radius: 6px;
-    display: block;
-    width: 100%;
-  }
-  .back-btn {
-    background-color: #ccc;
-    color: black;
-    border: none;
-    padding: 0.6em 1.2em;
-    font-size: 1.4rem;
-    margin-top: 1em;
-    border-radius: 6px;
-    display: block;
-    width: 100%;
-  }
-</style>
-
-  <meta charset="UTF-8" />
-  <title>今日の日記</title>
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      liff.init({ liffId: "1657254156-85059NlX" })
-        .then(() => {
-          if (!liff.isLoggedIn()) {
-            liff.login();
-          }
-        })
-        .catch(err => {
-          document.body.innerHTML = "<p>LIFFの初期化に失敗しました：" + err + "</p>";
-        });
-    });
-  </script>
+  <meta charset="UTF-8">
+  <title>食事記録フォーム</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <style>
     body {
       font-family: sans-serif;
-      padding: 1em;
-      background-color: #f9f9f9;
+      padding: 1.5em 1.5em 1.5em 0.5em;
+      background-color: #ffffff;
+      font-size: 26px;
+      line-height: 1.5;
     }
-    textarea {
-      width: 100%;
-      height: 150px;
-      font-size: 1rem;
-      padding: 0.5em;
+    h1 {
+      font-size: 30px;
+      margin-bottom: 0.8em;
+    }
+    .date-label {
+      font-size: 24px;
+      margin: 0;
+    }
+    .section {
+      margin-bottom: 1.5em;
+    }
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1em;
+    }
+    .checkbox-grid input[type="checkbox"] {
+      display: none;
+    }
+    .checkbox-grid label {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f0f0f0;
+      border: 2px solid #888;
+      border-radius: 10px;
+      font-size: 26px;
+      padding: 0.8em 1em;
+      min-width: 6em;
+      white-space: nowrap;
       box-sizing: border-box;
     }
-    button {
-      margin-top: 1em;
-      padding: 0.6em 1.5em;
-      font-size: 1rem;
-      background-color: #4CAF50;
+    .checkbox-grid input[type="checkbox"]:checked + label {
+      background-color: #007BFF;
       color: white;
-      border: none;
-      border-radius: 4px;
+      border-color: #0056b3;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 1em;
+      font-size: 26px;
+      margin-top: 0.5em;
+      box-sizing: border-box;
+    }
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+    }
+    .radio-group label {
+      background: #f0f0f0;
+      border: 2px solid #888;
+      border-radius: 8px;
+      padding: 1em;
+      font-size: 26px;
+      display: inline-block;
+    }
+    input[type="radio"] {
+      transform: scale(1.4);
+      margin-right: 0.6em;
+    }
+    button.send-btn {
+      background: #add8e6;
+      border: 3px solid #007BFF;
+      font-size: 28px;
+      padding: 1.2em 2em;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+    .button-row {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5em;
+      margin-top: 2em;
+    }
+    .back-btn {
+      background: #eeeeee;
+      border: 2px solid #999;
+      font-size: 26px;
+      padding: 1em 2em;
+      border-radius: 8px;
+      color: #333;
+      cursor: pointer;
     }
   </style>
 </head>
-<body style="font-size: 1.6rem; font-family: sans-serif; padding: 1em; text-align: left;">
+<body>
+  <div class="date-label">6/14（土）</div>
   <h1>📝 今日の日記</h1>
-  <form>
-    <label style="font-size: 1.5rem;">思いや出来事をご自由に</label><br/>
-    <textarea style="width: 100%; font-size: 1.4rem; padding: 0.5em;" id="diary" name="diary"  placeholder="例：要望・相談もOK" placeholder="例：要望・相談もOK"></textarea>
-    <div style="margin-top: 1em;">🎙️ マイクでも書けます</div>
-    <button type="button" class="send-btn" onclick="showSuccess()">👆記録する</button>
-<button type="button" class="back-btn" onclick="liff.closeWindow()">← 戻る</button>
+
+  <form id="formModal">
+    <div class="section">
+      <strong style="font-size:32px;">思いや出来事をご自由に：<br><span style='font-size:1rem;'>(マイクでも書けます🎤)</span></strong>
+      <div class="checkbox-grid">
+        <input type="checkbox" id="meal1" name="diary" value="ごはん" data-category="食事"><label for="meal1">ごはん</label>
+        <input type="checkbox" id="meal2" name="diary" value="パン" data-category="食事"><label for="meal2">パン</label>
+        <input type="checkbox" id="meal3" name="diary" value="めん" data-category="食事"><label for="meal3">めん</label>
+        <input type="checkbox" id="meal4" name="diary" value="惣菜" data-category="食事"><label for="meal4">惣菜</label>
+        <input type="checkbox" id="meal5" name="diary" value="肉" data-category="食事"><label for="meal5">肉</label>
+        <input type="checkbox" id="meal6" name="diary" value="魚" data-category="食事"><label for="meal6">魚</label>
+        <input type="checkbox" id="meal7" name="diary" value="野菜" data-category="食事"><label for="meal7">野菜</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <label>🍱おかず：</label>
+      <div style="font-size: 20px; color: #555; margin-top: 0.3em;">（マイクでも書けます🎤）</div>
+      <input type="text" name="side" data-category="食事" placeholder="例：煮物、刺身">
+      
+    </div>
+
+    <div class="section">
+      <strong>量を選択：</strong>
+      <div class="radio-group">
+        <label><input type="radio" name="amount" value="多め" data-category="食事"> 多め</label>
+        <label><input type="radio" name="amount" value="ふつう" data-category="食事"> ふつう</label>
+        <label><input type="radio" name="amount" value="少なめ" data-category="食事"> 少なめ</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <label>🍀感想：</label>
+      <input type="text" name="comment" data-category="食事" >
+    </div>
+
+    <div class="button-row">
+      <button type="button" class="send-btn" onclick="onSend()">👆報告する</button>
+      <button type="button" class="back-btn" onclick="history.back()">← 戻る</button>
+    </div>
   </form>
 
-<div id="successPopup" style="display:none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
-  background: white; border: 4px solid #007BFF; border-radius: 16px; padding: 1.5em 2em; z-index: 9999;
-  font-size: 2.5rem; text-align: center; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
-  <span style="white-space: nowrap;">⭕ 送信完了！</span>
-</div>
-<div id="errorPopup" style="
-  display: none;
-  font-size: 2rem;
-  color: red;
-  background: #fff8f8;
-  padding: 1em 2em;
-  border-radius: 12px;
-  border: 2px solid red;
-  position: fixed;
-  top: 48%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 9999;
-  text-align: center;">
-  ❌ 入力できていません
-</div>
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script>
+    liff.init({ liffId: "1657254156-zGmYJPg3" })
+      .then(() => {
+        if (!liff.isLoggedIn()) {
+          liff.login();
+        }
+      })
+      .catch(err => {
+        alert("LIFF初期化エラー：" + err);
+      });
 
-
-<script>
-  function showSuccess() {
-    const textarea = document.querySelector('textarea');
-    let textEntered = textarea && textarea.value.trim().length > 0;
-
-    if (!textEntered) {
-      const errorPopup = document.getElementById('errorPopup');
-      errorPopup.style.display = 'block';
-      setTimeout(() => {
-        errorPopup.style.display = 'none';
-      }, 2000);
-      return;
+    function saveToHistory(modalId) {
+      const key = modalId + "_history";
+      const history = JSON.parse(localStorage.getItem(key) || '[]');
+      const now = new Date();
+      const formElements = document.querySelectorAll('#' + modalId + ' input');
+      const content = [];
+      formElements.forEach(el => {
+        if ((el.type === "checkbox" && !el.checked) || (el.type === "radio" && !el.checked)) return;
+        if (el.type === "checkbox" || el.type === "radio") {
+          content.push({ category: el.dataset.category || "その他", value: el.value });
+        } else if (el.value && el.value.trim() !== "") {
+          const label = el.placeholder || el.name;
+          content.push({ category: el.dataset.category || "その他", value: label + "：" + el.value });
+        }
+      });
+      if (content.length > 0) {
+        history.push({ date: now.toISOString(), content: content });
+        localStorage.setItem(key, JSON.stringify(history));
+      }
     }
 
-    const popup = document.getElementById('successPopup');
-    popup.style.display = 'block';
-    setTimeout(() => {
-      if (typeof liff !== "undefined" && liff.closeWindow) {
-        liff.closeWindow();
-      }
-    }, 3000);
-  }
-</script>
+    function onSend() {
+      saveToHistory('formModal');
+      alert("送信しました！");
+    }
 
+    window.addEventListener('beforeunload', () => {
+      saveToHistory('formModal');
+    });
+  </script>
 </body>
 </html>
