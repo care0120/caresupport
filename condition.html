@@ -160,5 +160,21 @@
     });
 </script>
 
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+  liff.init({ liffId: "1657254156-R2XMb3OL" })
+    .then(() => {
+      console.log("LIFF 初期化成功");
+      if (!liff.isLoggedIn()) {
+        liff.login();
+      }
+    })
+    .catch(err => {
+      alert("LIFF初期化エラー：" + JSON.stringify(err));
+      console.error("LIFF init error:", err);
+    });
+</script>
+
 </body>
 </html>
