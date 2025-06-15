@@ -1,34 +1,150 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>体調の記録</title>
+  <title>体調記録フォーム</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 1.5em 0.5em;
+      font-size: 26px;
+      background: #fff;
+    }
+    h1 { font-size: 30px; margin-bottom: 0.4em; }
+    .section { margin-bottom: 1.5em; }
+    .date { font-size: 24px; margin-bottom: 0.8em; }
+    .radio-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8em;
+    }
+    .radio-row input[type="radio"] { display: none; }
+    .radio-row label {
+      padding: 0.6em 1.2em;
+      border: 2px solid #888;
+      border-radius: 10px;
+      background: #f0f0f0;
+    }
+    .radio-row input[type="radio"]:checked + label {
+      background: #007BFF;
+      color: white;
+      border-color: #0056b3;
+    }
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(7em, 1fr));
+      gap: 0.8em;
+    }
+    .checkbox-grid label {
+      display: flex;
+      align-items: center;
+      border: 2px solid #888;
+      border-radius: 10px;
+      padding: 0.6em 1em;
+      background: #f0f0f0;
+    }
+    .checkbox-grid input[type="checkbox"] {
+      transform: scale(1.4);
+      margin-right: 0.5em;
+    }
+    textarea {
+      width: 100%;
+      font-size: 24px;
+      padding: 1em;
+      height: 6em;
+      box-sizing: border-box;
+    }
+    .button-row {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+      margin-top: 0;
+    }
+    .send-btn {
+      background: #add8e6;
+      border: 3px solid #007BFF;
+      font-size: 28px;
+      padding: 1.2em 2em;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .back-btn {
+      background: #eee;
+      border: 2px solid #999;
+      font-size: 26px;
+      padding: 1em 2em;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <h2>こんにちは、<span id="userDisplay">読み込み中...</span></h2>
-  <h3>🌿 体調の記録</h3>
-  <form>
-    <label>体温:</label><input type="text" name="temperature"><br>
-    <label>痛み:</label><input type="text" name="pain"><br>
-    <label>気分:</label><input type="text" name="feeling"><br>
-    <button type="submit">送信</button>
-  </form>
-  
-<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-<script>
-  liff.init({ liffId: "1657254156-85059NlX" }).then(() => {
-    if (!liff.isLoggedIn()) {
-      liff.login();
-    } else {
-      liff.getProfile().then(profile => {
-        document.getElementById("userDisplay").innerText = profile.displayName + " さん";
-      });
-    }
-  }).catch(err => {
-    console.error("LIFF初期化エラー", err);
-  });
-</script>
+  <h1>📝体調記録</h1>
+  <div class="date">6/15（日）</div>
 
+  <form>
+    <div class="section">
+      <strong>体調：</strong>
+      <div class="radio-row">
+        <input type="radio" id="good" name="condition" value="良い"><label for="good">良い</label>
+        <input type="radio" id="normal" name="condition" value="ふつう"><label for="normal">ふつう</label>
+        <input type="radio" id="ok" name="condition" value="まあまあ"><label for="ok">まあまあ</label>
+        <input type="radio" id="bad" name="condition" value="いまいち"><label for="bad">いまいち</label>
+        <input type="radio" id="worse" name="condition" value="よくない"><label for="worse">よくない</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <strong>症状：</strong>
+      <div class="checkbox-grid">
+        <label><input type="checkbox" value="眠い">眠い</label>
+        <label><input type="checkbox" value="だるい">だるい</label>
+        <label><input type="checkbox" value="疲れ">疲れ</label>
+        <label><input type="checkbox" value="ふつうの震え">ふつうの震え</label>
+        <label><input type="checkbox" value="強い震え">強い震え</label>
+        <label><input type="checkbox" value="腰痛">腰痛</label>
+        <label><input type="checkbox" value="背痛">背痛</label>
+        <label><input type="checkbox" value="ボーっとする">ボーっとする</label>
+        <label><input type="checkbox" value="冷え">冷え</label>
+        <label><input type="checkbox" value="暑い">暑い</label>
+        <label><input type="checkbox" value="胃痛">胃痛</label>
+        <label><input type="checkbox" value="胃もたれ">胃もたれ</label>
+        <label><input type="checkbox" value="胸やけ">胸やけ</label>
+        <label><input type="checkbox" value="胃酸">胃酸</label>
+        <label><input type="checkbox" value="腹痛">腹痛</label>
+        <label><input type="checkbox" value="お腹ゆるい">お腹ゆるい</label>
+        <label><input type="checkbox" value="声枯れ">声枯れ</label>
+        <label><input type="checkbox" value="動悸">動悸</label>
+        <label><input type="checkbox" value="息苦しさ">息苦しさ</label>
+        <label><input type="checkbox" value="風邪気味">風邪気味</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <strong>気分：</strong>
+      <div class="checkbox-grid">
+        <label><input type="checkbox" value="良好">良好</label>
+        <label><input type="checkbox" value="元気">元気</label>
+        <label><input type="checkbox" value="歩きたい">歩きたい</label>
+        <label><input type="checkbox" value="憂うつ">憂うつ</label>
+        <label><input type="checkbox" value="不安">不安</label>
+        <label><input type="checkbox" value="心配・緊張">心配・緊張</label>
+        <label><input type="checkbox" value="意欲低下">意欲低下</label>
+        <label><input type="checkbox" value="落ち込み">落ち込み</label>
+        <label><input type="checkbox" value="ネガティブ">ネガティブ</label>
+      </div>
+    </div>
+
+    <div class="section" style="margin-bottom: 0;">
+      <label>🍀状態・気になること：<br><span style="font-size: 20px; color: #555;">（マイクでも書けます🎤）</span></label>
+      <textarea></textarea>
+    </div>
+
+    <div class="button-row">
+      <button type="button" class="send-btn" onclick="alert('送信しました！')">👆報告する</button>
+      <button type="button" class="back-btn" onclick="history.back()">← 戻る</button>
+    </div>
+  </form>
 </body>
 </html>
