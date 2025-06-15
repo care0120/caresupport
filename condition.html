@@ -17,7 +17,7 @@
     .radio-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.8em;
+      gap: 0.4em;
     }
     .radio-row input[type="radio"] { display: none; }
     .radio-row label {
@@ -33,15 +33,15 @@
     }
     .checkbox-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(7em, 1fr));
-      gap: 0.8em;
+      grid-template-columns: repeat(2, auto);
+      gap: 0.4em;
     }
     .checkbox-grid label {
       display: flex;
       align-items: center;
       border: 2px solid #888;
       border-radius: 10px;
-      padding: 0.6em 1em;
+      padding: 0.4em 0.6em;
       background: #f0f0f0;
     }
     .checkbox-grid input[type="checkbox"] {
@@ -78,10 +78,7 @@
       cursor: pointer;
     }
   </style>
-
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 </head>
-
 <body>
   <h1>📝体調記録</h1>
   <div class="date">6/15（日）</div>
@@ -149,33 +146,5 @@
       <button type="button" class="back-btn" onclick="history.back()">← 戻る</button>
     </div>
   </form>
-
-<script>
-  liff.init({ liffId: "1657254156-R2XMb3OL" })
-    .then(() => {
-      if (!liff.isLoggedIn()) {
-        liff.login();
-      }
-    })
-    .catch(err => {
-      alert("LIFF初期化エラー：" + err);
-    });
-</script>
-
-
-<script>
-  liff.init({ liffId: "1657254156-R2XMb3OL" })
-    .then(() => {
-      console.log("LIFF 初期化成功");
-      if (!liff.isLoggedIn()) {
-        liff.login();
-      }
-    })
-    .catch(err => {
-      alert("LIFF初期化エラー：" + JSON.stringify(err));
-      console.error("LIFF init error:", err);
-    });
-</script>
-
 </body>
 </html>
