@@ -42,14 +42,14 @@
     }
   </style>
 </head>
-<body>
+<body style="font-size: 1.6rem; font-family: sans-serif; padding: 1em; text-align: left;">
   <h1>📝 日記フォーム</h1>
   <form>
     <label for="diary">🌱思いや出来事をご自由に（例：要望・相談もOK）</label><br/>
-    <textarea id="diary" name="diary" placeholder="今日はこんなことがありました…"></textarea>
+    <textarea style="width: 100%; font-size: 1.4rem; padding: 0.5em;" id="diary" name="diary" placeholder="今日はこんなことがありました…"></textarea>
     <div style="margin-top: 1em;">🎙️ マイクでも書けます</div>
-    <button type="button" onclick="showSuccess()">👆報告する</button>
-<button type="button" onclick="liff.closeWindow()">← 戻る</button>
+    <button style="font-size: 1.4rem; padding: 0.6em 1.2em; margin-top: 1em; display: block; width: 100%;" type="button" onclick="showSuccess()">👆報告する</button>
+<button style="font-size: 1.4rem; padding: 0.6em 1.2em; margin-top: 1em; display: block; width: 100%;" type="button" onclick="liff.closeWindow()">← 戻る</button>
   </form>
 
 <div id="successPopup" style="display:none; position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
