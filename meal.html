@@ -2,20 +2,26 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>食事記録フォーム</title>
+  <title>食事の記録</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body { font-family: sans-serif; padding: 1.5em; font-size: 22px; }
     .section { margin-bottom: 1.5em; }
-    .checkbox-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8em; }
+    .checkbox-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8em;
+    }
     .checkbox-grid label, .radio-group label {
       display: inline-block; padding: 0.5em 1em; border: 1px solid #888; border-radius: 8px;
       background: #f0f0f0; cursor: pointer;
     }
     input[type="checkbox"], input[type="radio"] { margin-right: 0.5em; transform: scale(1.2); }
-    input[type="text"] { width: 100%; padding: 0.5em; font-size: 1em; margin-top: 0.5em; }
-    .button-row { margin-top: 1.5em; }
-    .send-btn { padding: 0.8em 2em; font-size: 1.1em; background: #add8e6; border: 2px solid #007BFF; border-radius: 8px; cursor: pointer; }
+    input[type="text"] {
+      width: 100%; padding: 0.5em; font-size: 1em; margin-top: 0.5em;
+    }
+    .send-btn {
+      padding: 0.8em 2em; font-size: 1.1em; background: #add8e6;
+      border: 2px solid #007BFF; border-radius: 8px; cursor: pointer;
+    }
     #historyLink {
       position:fixed; bottom:0.6rem; right:0.7rem;
       font-size:0.8rem; opacity:0.6; text-decoration:none;
@@ -36,10 +42,12 @@
         <label><input type="checkbox" name="main" value="野菜">野菜</label>
       </div>
     </div>
+
     <div class="section">
       <label>🍱 おかず（自由入力）</label>
       <input type="text" name="side" placeholder="例：煮物、刺身">
     </div>
+
     <div class="section">
       <strong>量を選択：</strong>
       <div class="radio-group">
@@ -48,13 +56,13 @@
         <label><input type="radio" name="amount" value="少なめ">少なめ</label>
       </div>
     </div>
+
     <div class="section">
       <label>🍀 感想・気になること</label>
       <input type="text" name="comment" placeholder="例：美味しかった、食べすぎた">
     </div>
-    <div class="button-row">
-      <button type="button" class="send-btn" onclick="submitForm()">👆 報告する</button>
-    </div>
+
+    <button type="button" class="send-btn" onclick="submitForm()">👆 報告する</button>
   </form>
 
   <a id="historyLink" href="history.html">履歴</a>
@@ -77,14 +85,17 @@
         values: [main, side, amount, comment]
       };
 
-      await fetch("https://script.google.com/macros/s/AKfycby_sQiAOeym-MGRRAK1EtswdHiQg9X5BkNiN5P0y0tJWdIRPoDvs6e1fDHY8T1L74M9/exec", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(data)
-});
-
-
-      alert("送信が完了しました");
+      try {
+        await fetch("https://script.google.com/macros/s/AKfycby_sQiAOeym-MGRRAK1EtswdHiQg9X5BkNiN5P0y0tJWdIRPoDvs6e1fDHY8T1L74M9/exec", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+        alert("送信が完了しました");
+      } catch (err) {
+        alert("送信に失敗しました");
+        console.error(err);
+      }
     }
   </script>
 </body>
