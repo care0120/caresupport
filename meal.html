@@ -69,6 +69,7 @@
 
   <script>
     async function submitForm() {
+      console.log("submitForm() 実行された");
       const form = document.forms.mealForm;
       const main = Array.from(form.main).filter(cb => cb.checked).map(cb => cb.value).join(',');
       const side = form.side.value.trim();
