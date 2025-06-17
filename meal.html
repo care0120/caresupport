@@ -69,7 +69,8 @@
 
   <script>
     async function submitForm() {
-      console.log("submitForm() 実行された");
+      console.log("🔍 submitForm() 実行された");
+
       const form = document.forms.mealForm;
       const main = Array.from(form.main).filter(cb => cb.checked).map(cb => cb.value).join(',');
       const side = form.side.value.trim();
@@ -87,11 +88,13 @@
       };
 
       try {
-        await fetch("https://script.google.com/macros/s/AKfycbyHIhlfjZwGZ9KjifGYEOOcHCx8AgwQrjgpXnx0CRxAUCDOptgkd7rQVPQXETpvdXYC/exec", {
+        const res = await fetch("https://script.google.com/macros/s/AKfycbyHIhlfjZwGZ9KjifGYEOOcHCx8AgwQrjgpXnx0CRxAUCDOptgkd7rQVPQXETpvdXYC/exec", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data)
         });
+
+        if (!res.ok) throw new Error("Fetch failed: " + res.status);
         alert("送信が完了しました");
       } catch (err) {
         alert("送信に失敗しました");
