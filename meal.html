@@ -217,11 +217,10 @@
   <div id="successPopup" style="display:none;">⭕ 送信完了</div>
   <div id="errorPopup" style="display:none;">❌ 入力してください</div>
 
- <script>
+  <script>
     // ★ここにGASウェブアプリのURLを貼り付ける★
-    // 以前のコメントは無視して、ここにURLを記述してください。
+    // あなたが貼り付けた新しいURLをそのまま使用します。
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyiRwI_BQWdzRzVdabusGj2v-QdPMCFhVqKUN0EJnqx5AGjmNKI6E2YEsGQLIeprg15/exec"; 
-
 
     async function submitForm() {
       const f = document.forms.mealForm;
@@ -240,53 +239,51 @@
         return; 
       }
 
+      // データオブジェクトを作成
+      const data = {
+        type: "meal", // GASのdoPostで処理されるタイプ
+        values: [main, side, amount, comment]
+      };
+
       try {
-        // google.script.run を使って GAS の addMeal 関数を直接呼び出します
-        // withSuccessHandler と withFailureHandler を使用し、非同期処理を適切に扱います
-        google.script.run
-                      .withSuccessHandler(function(response) {
-                          // GASのaddMeal関数が 'ok' を返すことを想定
-                          if (response === 'ok') {
-                              document.getElementById("successPopup").style.display = "block";
-                              setTimeout(() => {
-                                  document.getElementById("successPopup").style.display = "none";
-                                  // フォームのリセット
-                                  [...f.main].forEach(c => c.checked = false); 
-                                  f.side.value = ""; 
-                                  [...f.amount].forEach(r => r.checked = false); 
-                                  f.comment.value = ""; 
-                              }, 2000); 
-                          } else {
-                              // GASからの予期しないレスポンス
-                              console.error('GASからの予期しないレスポンス:', response);
-                              document.getElementById("errorPopup").textContent = "❌ 送信に失敗しました: 不明な応答";
-                              document.getElementById("errorPopup").style.display = "block";
-                              setTimeout(() => {
-                                  document.getElementById("errorPopup").style.display = "none";
-                                  document.getElementById("errorPopup").textContent = "❌ 入力してください";
-                              }, 4000);
-                          }
-                      })
-                      .withFailureHandler(function(error) {
-                          // ネットワークエラーやGAS内部のエラーなど、処理失敗時のハンドリング
-                          console.error('送信エラー:', error);
-                          document.getElementById("errorPopup").textContent = "❌ 送信に失敗しました: " + error.message;
-                          document.getElementById("errorPopup").style.display = "block";
-                          setTimeout(() => {
-                              document.getElementById("errorPopup").style.display = "none";
-                              document.getElementById("errorPopup").textContent = "❌ 入力してください";
-                          }, 4000); 
-                      })
-                      .addMeal(main, side, amount, comment); // GASのaddMeal関数を呼び出す
-        
+        const response = await fetch(GAS_WEB_APP_URL, {
+          method: 'POST',
+          mode: 'cors', // CORSモードを明示的に指定
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data) // JSON形式で送信
+        });
+
+        if (!response.ok) {
+          // HTTPステータスが200番台以外の場合
+          const errorText = await response.text(); // エラーレスポンスの本文を取得
+          throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        }
+
+        const result = await response.json(); // レスポンスをJSONとしてパース
+
+        if (result.status === 'ok') {
+          document.getElementById("successPopup").style.display = "block";
+          setTimeout(() => {
+            document.getElementById("successPopup").style.display = "none";
+            // フォームのリセット
+            [...f.main].forEach(c => c.checked = false); 
+            f.side.value = ""; 
+            [...f.amount].forEach(r => r.checked = false); 
+            f.comment.value = ""; 
+          }, 2000); 
+        } else {
+          // GASから返されたカスタムエラーメッセージがあれば表示
+          throw new Error(result.message || "不明なエラー");
+        }
       } catch (e) {
-          // google.script.run の呼び出し自体が失敗した場合（例: google.script.runが未定義の場合など）
-          console.error('送信エラー (クライアント側):', e);
+          console.error('送信エラー:', e);
           document.getElementById("errorPopup").textContent = "❌ 送信に失敗しました: " + e.message;
           document.getElementById("errorPopup").style.display = "block";
           setTimeout(() => {
             document.getElementById("errorPopup").style.display = "none";
-            document.getElementById("errorPopup").textContent = "❌ 入力してください";
+            document.getElementById("errorPopup").textContent = "❌ 入力してください"; 
           }, 4000); 
       }
     }
