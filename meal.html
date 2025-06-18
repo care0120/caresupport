@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>🍙 食事の記録</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base target="_top"> <style>
+    body {
+      font-family: sans-serif;
+      font-size: 26px; /* medicine.htmlに合わせる */
+      padding: 1.5em 0.5em 1.5em 0.5em; /* medicine.htmlに合わせる */
+      background: #fff;
+      color: #000; /* デフォルトの文字色 */
+      text-align: left;
+      line-height: 1.5; /* 行間の調整 */
+    }
+    h1 {
+      font-size: 32px; /* medicine.htmlに合わせる */
+      margin: 0.2em 0 0.4em; /* medicine.htmlに合わせる */
+    }
+    .section {
+      margin-bottom: 1.5em; /* medicine.htmlに合わせる */
+    }
+    /* チェックボックス/ラジオボタンのグリッドレイアウト */
+    .checkbox-grid, .radio-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* 2列で均等幅 */
+      gap: 1em; /* medicine.htmlのradio-gridに合わせる */
+    }
+    /* チェックボックス/ラジオボタンのラベル共通スタイル */
+    .checkbox-grid label,
+    .radio-group label {
+      display: flex; /* Flexboxで内容を中央揃え */
+      align-items: center;
+      justify-content: center; /* 水平方向中央 */
+      text-align: center; /* テキストも中央揃え */
+      border: 2px solid #888;
+      border-radius: 10px;
+      padding: 0.8em 1.5em; /* medicine.htmlのラベルと一致 */
+      background: #f0f0f0;
+      cursor: pointer;
+      font-size: 26px; /* medicine.htmlのラベルフォントサイズと一致 (pxで指定) */
+      box-sizing: border-box; /* パディングやボーダーを含めて幅を計算 */
+      white-space: nowrap; /* ラベル内の文字が改行されないように */
+      transition: background-color 0.2s, border-color 0.2s, color 0.2s; /* ホバー/選択時のアニメーション */
+    }
+    /* チェックボックス/ラジオボタン本体のスタイル */
+    .checkbox-grid input[type="checkbox"],
+    .radio-group input[type="radio"] {
+      transform: scale(1.6); /* medicine.htmlの transform: scale(1.6) を維持 */
+      margin-right: 0.6em; /* medicine.htmlの margin-right を維持 */
+      flex-shrink: 0; /* チェックボックスが縮まないように */
+    }
+    /* 選択された際のスタイル */
+    .checkbox-grid input[type="checkbox"]:checked + label,
+    .radio-group input[type="radio"]:checked + label {
+      background: #007BFF;
+      color: white;
+      border-color: #0056b3;
+    }
+
+    /* テキストエリアとテキスト入力欄のスタイル */
+    textarea, input[type="text"] {
+      width: 100%;
+      font-size: 24px; /* medicine.htmlの.date要素のフォントサイズに合わせる */
+      padding: 0.8em; /* medicine.htmlのラベルと同じパディングで統一感を出す */
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    textarea {
+      height: 6em; /* テキストエリアの高さ。medicine.htmlのtextareaの高さに近づける */
+      resize: vertical; /* 縦方向のみリサイズ可能 */
+    }
+    input[type="text"][name="side"] { /* おかず入力欄の高さ調整 */
+      height: auto; /* 自動調整 */
+      min-height: 2.5em; /* 最小高さ */
+    }
+
+    /* ボタンのスタイル (medicine.htmlを参考に拡大) */
+    .send-btn, .back-btn {
+      display: block; /* ブロック要素 */
+      font-size: 28px; /* medicine.htmlのボタンの推定サイズに合わせて調整 */
+      border-radius: 10px; /* medicine.htmlと一致 */
+      padding: 1.2em 2em; /* medicine.htmlのボタンのパディングを参考に調整 */
+      cursor: pointer;
+      box-sizing: border-box;
+      white-space: nowrap; /* テキストの改行を防ぐ */
+      text-align: center; /* テキスト中央寄せ */
+      width: 100%; /* 親要素の幅に合わせて100%に広げる */
+      max-width: 700px; /* medicine.htmlのボタンの幅に近づける */
+      transition: background-color 0.2s, border-color 0.2s, color 0.2s; /* ホバー時のアニメーション */
+    }
+    .send-btn {
+      background-color: #add8e6; /* medicine.htmlの背景色 */
+      color: #000; /* medicine.htmlの文字色 */
+      border: 3px solid #007BFF; /* medicine.htmlのボーダー */
+    }
+    .send-btn:hover {
+        background-color: #9ac0d6; /* ホバー時の色 */
+    }
+    .back-btn {
+      background-color: #eeeeee; /* medicine.htmlの背景色 */
+      color: #333; /* medicine.htmlの文字色 */
+      border: 2px solid #999; /* medicine.htmlのボーダー */
+    }
+    .back-btn:hover {
+        background-color: #dddddd; /* ホバー時の色 */
+    }
+    /* ボタンを縦に並べ、中央に配置するコンテナ */
+    .button-row {
+      display: flex;
+      flex-direction: column; /* 縦並び */
+      gap: 1.2em; /* medicine.htmlに合わせる */
+      align-items: center; /* Flexアイテム（ボタン）を主軸（この場合横方向）で中央揃え */
+      margin-top: 2em; /* 上部の余白 */
+      width: 100%; /* 親要素の幅を明示的に100%にする */
+    }
+
+    #historyLink {
+      position: fixed;
+      bottom: 0.6rem;
+      right: 0.8rem;
+      font-size: 0.8rem;
+      opacity: 0.6;
+      color: #111;
+      text-decoration: none;
+    }
+    .sub {
+      font-size: 0.7em;
+      color: #555;
+      margin-bottom: 0.3em;
+    }
+
+    /* ポップアップのスタイル (medicine.htmlのものを流用) */
+    #successPopup, #errorPopup {
+        position:fixed; 
+        top: 45%; 
+        left:50%; 
+        transform:translate(-50%, -50%);
+        background: white; 
+        border: 4px solid #007BFF; 
+        border-radius: 16px; 
+        padding: 1.5em 2em; 
+        z-index: 9999;
+        font-size: 2.5rem; 
+        text-align: center; 
+        box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        white-space: nowrap; 
+    }
+    #errorPopup {
+        border: 2px solid red;
+        color: red;
+        background: #fff8f8;
+    }
+  </style>
+</head>
+<body>
+  <h1>🍙 食事の記録</h1>
+  <form id="mealForm">
+    <div class="section">
+      <strong>主食を選択：</strong>
+      <div class="checkbox-grid">
+        <label><input type="checkbox" name="main" value="ごはん" />ごはん</label>
+        <label><input type="checkbox" name="main" value="パン" />パン</label>
+        <label><input type="checkbox" name="main" value="めん" />めん</label>
+        <label><input type="checkbox" name="main" value="魚" />魚</label>
+        <label><input type="checkbox" name="main" value="肉" />肉</label>
+        <label><input type="checkbox" name="main" value="野菜" />野菜</label>
+        <label><input type="checkbox" name="main" value="弁当" />弁当</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <label>🍱 おかず</label>
+      <div class="sub">（例：チキン、サラダなど）</div>
+      <input type="text" name="side" placeholder="例：チキン、サラダ" />
+    </div>
+
+    <div class="section">
+      <strong>量：</strong>
+      <div class="radio-group">
+        <label><input type="radio" name="amount" value="多め" />多め</label>
+        <label><input type="radio" name="amount" value="ふつう" />ふつう</label>
+        <label><input type="radio" name="amount" value="少なめ" />少なめ</label>
+      </div>
+    </div>
+
+    <div class="section">
+      <label>🍀 感想・気になること：</label>
+      <div class="sub">（🎙️マイクでも書けます）</div>
+      <textarea name="comment" rows="4" placeholder="例：美味しかった、食べすぎた"></textarea>
+    </div>
+
+    <div class="button-row">
+      <button type="button" class="send-btn" onclick="submitForm()">👆 報告する</button>
+      <button type="button" class="back-btn" onclick="history.back()">← 戻る</button>
+    </div>
+  </form>
+
+  <a id="historyLink" href="history.html">履歴</a>
+
+  <div id="successPopup" style="display:none;">⭕ 送信完了！</div>
+  <div id="errorPopup" style="display:none;">❌ いずれか1つは入力してください</div>
+
+  <script>
+    // **重要: ここにGASデプロイ時に取得したウェブアプリのURLを貼り付けてください**
+    // 例: const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz_YOUR_WEB_APP_ID_HERE/exec";
+    const GAS_WEB_APP_URL = "ここにGASのウェブアプリURLを貼り付け"; // ★要編集
+
+    async function submitForm() {
+      const f = document.forms.mealForm;
+
+      const main = [...f.main].filter(c => c.checked).map(c => c.value).join(',');
+      const side = f.side.value.trim();
+      const amount = f.amount.value || ""; 
+      const comment = f.comment.value.trim();
+
+      // 入力チェック
+      if (!main && !side && !amount && !comment) {
+        document.getElementById("errorPopup").style.display = "block";
+        setTimeout(() => {
+          document.getElementById("errorPopup").style.display = "none";
+        }, 2000);
+        return; 
+      }
+
+      const formData = {
+        type: "meal", // GAS側で識別するためのタイプ
+        values: [main, side, amount, comment]
+      };
+
+      try {
+        const response = await fetch(GAS_WEB_APP_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            // GitHub Pagesのドメインからのみ許可する場合
+            // 'Origin': 'https://[あなたのユーザー名].github.io' 
+            // （ただし、GAS側でAccess-Control-Allow-Origin: '*' を設定している場合は不要）
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+          // HTTPステータスが200番台以外の場合
+          const errorData = await response.json().catch(() => ({})); // JSON解析失敗も考慮
+          throw new Error('サーバーエラー: ' + (errorData.message || response.statusText || '不明なエラー'));
+        }
+
+        const result = await response.json();
+        if (result.status === "success") {
+          document.getElementById("successPopup").style.display = "block";
+          setTimeout(() => {
+            document.getElementById("successPopup").style.display = "none";
+            // フォームのリセット
+            [...f.main].forEach(c => c.checked = false); 
+            f.side.value = ""; 
+            [...f.amount].forEach(r => r.checked = false); 
+            f.comment.value = ""; 
+          }, 2000); 
+        } else {
+          throw new Error('GASからのエラー: ' + (result.message || '不明なエラー'));
+        }
+
+      } catch (e) {
+          console.error('送信エラー:', e);
+          document.getElementById("errorPopup").textContent = "❌ 送信に失敗しました: " + e.message;
+          document.getElementById("errorPopup").style.display = "block";
+          setTimeout(() => {
+            document.getElementById("errorPopup").style.display = "none";
+            document.getElementById("errorPopup").textContent = "❌ いずれか1つは入力してください"; // エラーメッセージを元に戻す
+          }, 4000); // エラー表示時間を少し長くする
+      }
+    }
+  </script>
+</body>
+</html>
