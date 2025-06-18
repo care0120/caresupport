@@ -21,10 +21,12 @@
     .section {
       margin-bottom: 1.5em; /* medicine.htmlに合わせる */
     }
-    /* チェックボックス/ラジオボタンのグリッドレイアウト */
+    /* チェックボックス/ラジオボタンのグリッドレイアウトを調整 */
+    /* 画面幅に合わせて自動的に列数と幅を調整し、はみ出しを防ぐ */
     .checkbox-grid, .radio-group {
       display: grid;
-      grid-template-columns: 1fr 1fr; /* 2列で均等幅 */
+      /* 最小140pxのアイテムを自動で配置し、余ったスペースを均等に割り振る */
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
       gap: 1em; /* medicine.htmlのradio-gridに合わせる */
     }
     /* チェックボックス/ラジオボタンのラベル共通スタイル */
@@ -43,6 +45,7 @@
       box-sizing: border-box; /* パディングやボーダーを含めて幅を計算 */
       white-space: nowrap; /* ラベル内の文字が改行されないように */
       transition: background-color 0.2s, border-color 0.2s, color 0.2s; /* ホバー/選択時のアニメーション */
+      min-width: fit-content; /* 内容に応じて最小幅を確保 */
     }
     /* チェックボックス/ラジオボタン本体のスタイル */
     .checkbox-grid input[type="checkbox"],
@@ -117,17 +120,22 @@
       width: 100%; /* 親要素の幅を明示的に100%にする */
     }
 
+    /* 「履歴」リンクのスタイル */
     #historyLink {
       position: fixed;
       bottom: 0.6rem;
       right: 0.8rem;
-      font-size: 0.8rem;
-      opacity: 0.6;
-      color: #111;
-      text-decoration: none;
+      font-size: 1.5rem; /* 大きめのフォントサイズ */
+      opacity: 0.8; /* 少し透明度を上げて目立たせすぎない */
+      color: #007BFF; /* ボタンと同じような青色 */
+      text-decoration: underline; /* 下線でリンクとわかるように */
+      padding: 0.5em 1em;
+      background-color: rgba(255, 255, 255, 0.8); /* 背景を少し透明にして視認性確保 */
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
     .sub {
-      font-size: 0.7em;
+      font-size: 0.9em; /* 感想やおかずの例のフォントを少し大きく */
       color: #555;
       margin-bottom: 0.3em;
     }
@@ -173,9 +181,7 @@
 
     <div class="section">
       <label>🍱 おかず</label>
-      <div class="sub">（例：チキン、サラダなど）</div>
-      <input type="text" name="side" placeholder="例：チキン、サラダ" />
-    </div>
+      <div class="sub">（例：チキン、サラダなど）</div> <input type="text" name="side" /> </div>
 
     <div class="section">
       <strong>量：</strong>
@@ -188,9 +194,7 @@
 
     <div class="section">
       <label>🍀 感想・気になること：</label>
-      <div class="sub">（🎙️マイクでも書けます）</div>
-      <textarea name="comment" rows="4" placeholder="例：美味しかった、食べすぎた"></textarea>
-    </div>
+      <div class="sub" style="font-size: 1.2em;">（🎙️マイクでも書けます）</div> <textarea name="comment" rows="4"></textarea> </div>
 
     <div class="button-row">
       <button type="button" class="send-btn" onclick="submitForm()">👆 報告する</button>
@@ -198,9 +202,7 @@
     </div>
   </form>
 
-  <a id="historyLink" href="history.html">履歴</a>
-
-  <div id="successPopup" style="display:none;">⭕ 送信完了！</div>
+  <a id="historyLink" href="history.html">履歴</a> <div id="successPopup" style="display:none;">⭕ 送信完了！</div>
   <div id="errorPopup" style="display:none;">❌ いずれか1つは入力してください</div>
 
   <script>
@@ -235,16 +237,12 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            // GitHub Pagesのドメインからのみ許可する場合
-            // 'Origin': 'https://[あなたのユーザー名].github.io' 
-            // （ただし、GAS側でAccess-Control-Allow-Origin: '*' を設定している場合は不要）
           },
           body: JSON.stringify(formData)
         });
 
         if (!response.ok) {
-          // HTTPステータスが200番台以外の場合
-          const errorData = await response.json().catch(() => ({})); // JSON解析失敗も考慮
+          const errorData = await response.json().catch(() => ({})); 
           throw new Error('サーバーエラー: ' + (errorData.message || response.statusText || '不明なエラー'));
         }
 
@@ -270,7 +268,7 @@
           setTimeout(() => {
             document.getElementById("errorPopup").style.display = "none";
             document.getElementById("errorPopup").textContent = "❌ いずれか1つは入力してください"; // エラーメッセージを元に戻す
-          }, 4000); // エラー表示時間を少し長くする
+          }, 4000); 
       }
     }
   </script>
