@@ -188,7 +188,7 @@
     <div class="section">
       <label>🍱 おかず</label> 
       <div class="sub">（例：チキン、サラダなど）</div> 
-      <input type="text" name="side" /> 
+      <textarea name="side" rows="1"></textarea>
     </div>
 
     <div class="section">
@@ -219,7 +219,7 @@
 
   <script>
     // ★ここにGASウェブアプリのURLを貼り付ける★
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxquZoH0SWjb9Q6-qr7bMgpVdqI9F5XOri0-n_n3y5Uymsm_m8UDvCrzU_bCl8QNBDN/exec"; 
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw5LUmzbYy9ja_39IBnD13088qnKtHFgRFfL-0ApPy21rHaxdS8hL83WsRiqY0yBWY/exec"; 
 
     async function submitForm() {
       const f = document.forms.mealForm;
@@ -231,9 +231,11 @@
 
       // 入力チェック
       if (!main && !side && !amount && !comment) {
+        document.getElementById("errorPopup").textContent = "❌ いずれか1つは入力してください";
         document.getElementById("errorPopup").style.display = "block";
         setTimeout(() => {
           document.getElementById("errorPopup").style.display = "none";
+          document.getElementById("errorPopup").textContent = "❌ 入力してください";
         }, 2000);
         return; 
       }
