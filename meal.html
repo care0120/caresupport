@@ -227,7 +227,7 @@
   <script>
     // **重要: ここにGASデプロイ時に取得したウェブアプリのURLを貼り付けてください**
     // 例: const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz_YOUR_WEB_APP_ID_HERE/exec";
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzZDGrZ9gU_Sxjl42HHblRtlENZwhntWWtGomFUTvWCSixiaWMpZNSy495I57WIdoFq/exec"; // ★正しいURLを埋め込みました
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzZDGrZ9gU_Sxjl42HHblRtlENZwhntWWtGomFUTvWCSixiaWMpZNSy495I57WIdoFq/exec"; // ★正しいURLを埋め込み済みです
 
     async function submitForm() {
       const f = document.forms.mealForm;
@@ -252,7 +252,8 @@
       };
 
       try {
-        const response = await fetch(GAS_WEB_APP_URL, { // ← ここでGAS_WEB_APP_URLを使用
+        // ここでGAS_WEB_APP_URL変数を使用しています
+        const response = await fetch(GAS_WEB_APP_URL, { 
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -261,6 +262,7 @@
         });
 
         if (!response.ok) {
+          // サーバーからの具体的なエラーメッセージを試みる
           const errorData = await response.json().catch(() => ({})); 
           throw new Error('サーバーエラー: ' + (errorData.message || response.statusText || '不明なエラー'));
         }
