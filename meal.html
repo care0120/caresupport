@@ -217,9 +217,11 @@
   <div id="successPopup" style="display:none;">⭕ 送信完了</div>
   <div id="errorPopup" style="display:none;">❌ 入力してください</div>
 
-  <script>
-    // google.script.run を使うため、GASのウェブアプリURLは不要です。
-    // const GAS_WEB_APP_URL は削除しました。
+ <script>
+    // ★ここにGASウェブアプリのURLを貼り付ける★
+    // 以前のコメントは無視して、ここにURLを記述してください。
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyiRwI_BQWdzRzVdabusGj2v-QdPMCFhVqKUN0EJnqx5AGjmNKI6E2YEsGQLIeprg15/exec"; 
+
 
     async function submitForm() {
       const f = document.forms.mealForm;
