@@ -219,7 +219,7 @@
 
   <script>
     // ★ここにGASウェブアプリのURLを貼り付ける★
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw5LUmzbYy9ja_39IBnD13088qnKtHFgRFfL-0ApPy21rHaxdS8hL83WsRiqY0yBWY/exec"; 
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbybsv4CXX2SRxjKOvv9wljwj31FVtMjeaexb2MoWzbl4Tjqvk69RsRXGSmZBFxH1L2i/exec"; 
 
     async function submitForm() {
       const f = document.forms.mealForm;
@@ -283,11 +283,3 @@
           document.getElementById("errorPopup").textContent = "❌ 送信に失敗しました: " + e.message;
           document.getElementById("errorPopup").style.display = "block";
           setTimeout(() => {
-            document.getElementById("errorPopup").style.display = "none";
-            document.getElementById("errorPopup").textContent = "❌ 入力してください"; 
-          }, 4000); 
-      }
-    }
-  </script>
-</body>
-</html>
