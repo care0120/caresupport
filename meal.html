@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -24,6 +23,10 @@
     .send-btn {
       padding: 0.8em 2em; font-size: 1.1em; background: #add8e6;
       border: 2px solid #007BFF; border-radius: 8px; cursor: pointer;
+    }
+    .back-btn {
+      padding: 0.5em 1.5em; font-size: 1em; margin-left: 1em;
+      background: #eee; border: 1px solid #ccc; border-radius: 6px;
     }
     #historyLink {
       position:fixed; bottom:0.6rem; right:0.7rem;
@@ -80,7 +83,7 @@
 
     <div class="section">
       <label>🍀 感想・気になること</label>
-      <div class="sub">（🎙️マイクでも書けます）</div> 
+      <div class="sub">（🎙️マイクでも書けます）</div>
       <input type="text" name="comment" placeholder="" />
     </div>
 
@@ -90,10 +93,10 @@
 
   <a id="historyLink" href="history.html">履歴</a>
 
-  <div id="errorPopup">❌ 送信失敗。</div>
+  <div id="errorPopup">❌ 送信失敗</div>
 
   <script>
-    async function submitForm() {
+    function submitForm() {
       const form = document.forms.mealForm;
       const main = Array.from(form.main)
         .filter(cb => cb.checked)
@@ -104,28 +107,14 @@
       const comment = form.comment.value.trim();
 
       if (!main && !side && !amount && !comment) {
-        showErrorPopup("❌ 入力してください");
+        showErrorPopup("❌ 入力されていません");
         return;
       }
 
-      const data = {
-        type: "meal",
-        values: [main, side, amount, comment]
-      };
-
-      try {
-        const res = await fetch("https://script.google.com/macros/s/AKfycbx0rimn5ETbw-Yw4g3Mmf6ZM1PECmNoQWp1a8Kop-VxBEIZyHebyn1VTryktzrfuptx/exec", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
-
-        if (!res.ok) throw new Error("Fetch error: " + res.status);
-        alert("送信が完了しました！");
-      } catch (err) {
-        showErrorPopup("❌ 送信失敗");
-        console.error("送信エラー:", err);
-      }
+      google.script.run
+        .withSuccessHandler(() => alert("送信が完了しました！"))
+        .withFailureHandler(() => showErrorPopup("❌ 送信失敗"))
+        .addMeal(main, side, amount, comment);
     }
 
     function showErrorPopup(message) {
