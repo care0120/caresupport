@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -27,6 +28,23 @@
     #historyLink {
       position:fixed; bottom:0.6rem; right:0.7rem;
       font-size:0.8rem; opacity:0.6; text-decoration:none;
+    }
+    #errorPopup {
+      display: none;
+      font-size: 2.4rem;
+      color: red;
+      background: #fff8f8;
+      padding: 1em 2em;
+      border-radius: 12px;
+      border: 4px solid red;
+      position: fixed;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
     }
   </style>
 </head>
@@ -62,53 +80,62 @@
 
     <div class="section">
       <label>🍀 感想・気になること</label>
-            <div class="sub">（🎙️マイクでも書けます）</div> 
+      <div class="sub">（🎙️マイクでも書けます）</div> 
       <input type="text" name="comment" placeholder="" />
     </div>
 
     <button type="button" class="send-btn" onclick="submitForm()">👆 報告する</button>
- <button type="button" class="back-btn" onclick="history.back()">← 戻る</button>
+    <button type="button" class="back-btn" onclick="history.back()">← 戻る</button>
   </form>
 
   <a id="historyLink" href="history.html">履歴</a>
 
-<script>
-  async function submitForm() {
-    const form = document.forms.mealForm;
-    const main = Array.from(form.main)
-      .filter(cb => cb.checked)
-      .map(cb => cb.value)
-      .join(",");
-    const side = form.side.value.trim();
-    const amount = form.amount.value;
-    const comment = form.comment.value.trim();
+  <div id="errorPopup">❌ 送信失敗。</div>
 
-    if (!main && !side && !amount && !comment) {
-      alert("×入力されていません");
-      return;
+  <script>
+    async function submitForm() {
+      const form = document.forms.mealForm;
+      const main = Array.from(form.main)
+        .filter(cb => cb.checked)
+        .map(cb => cb.value)
+        .join(",");
+      const side = form.side.value.trim();
+      const amount = form.amount.value;
+      const comment = form.comment.value.trim();
+
+      if (!main && !side && !amount && !comment) {
+        showErrorPopup("❌ 入力してください");
+        return;
+      }
+
+      const data = {
+        type: "meal",
+        values: [main, side, amount, comment]
+      };
+
+      try {
+        const res = await fetch("https://script.google.com/macros/s/AKfycbx0rimn5ETbw-Yw4g3Mmf6ZM1PECmNoQWp1a8Kop-VxBEIZyHebyn1VTryktzrfuptx/exec", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        if (!res.ok) throw new Error("Fetch error: " + res.status);
+        alert("送信が完了しました！");
+      } catch (err) {
+        showErrorPopup("❌ 送信失敗");
+        console.error("送信エラー:", err);
+      }
     }
 
-    const data = {
-      type: "meal",
-      values: [main, side, amount, comment]
-    };
-
-    try {
-      const res = await fetch("https://script.google.com/macros/s/AKfycbyHIhlfjZwGZ9KjifGYEOOcHCx8AgwQrjgpXnx0CRxAUCDOptgkd7rQVPQXETpvdXYC/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-
-      if (!res.ok) throw new Error("Fetch error: " + res.status);
-      alert("送信が完了しました！");
-    } catch (err) {
-      alert("送信に失敗しました");
-      console.error("送信エラー:", err);
+    function showErrorPopup(message) {
+      const popup = document.getElementById("errorPopup");
+      popup.textContent = message;
+      popup.style.display = "block";
+      setTimeout(() => {
+        popup.style.display = "none";
+      }, 2000);
     }
-  }
-</script>
-
-
+  </script>
 </body>
 </html>
