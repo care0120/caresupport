@@ -62,10 +62,11 @@
 
     <div class="section">
       <label>🍀 感想・気になること</label>
-      <input type="text" name="comment" placeholder="例：美味しかった、食べすぎた" />
+      <input type="text" name="comment" placeholder="" />
     </div>
 
     <button type="button" class="send-btn" onclick="submitForm()">👆 報告する</button>
+ <button type="button" class="back-btn" onclick="history.back()">← 戻る</button>
   </form>
 
   <a id="historyLink" href="history.html">履歴</a>
@@ -82,7 +83,7 @@
     const comment = form.comment.value.trim();
 
     if (!main && !side && !amount && !comment) {
-      alert("いずれか1つは入力してください");
+      alert("×入力されていません");
       return;
     }
 
